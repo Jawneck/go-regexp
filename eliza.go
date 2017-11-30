@@ -5,9 +5,11 @@ import(
 	"regexp"
 	"time"
 	"math/rand"
+	"strings"
 )
 
 func ElizaResponse(input string) string{
+
 	if matched, _ := regexp.MatchString(`(?i).*\bFrench\b.*`, input); matched {
 		return "France is a beautiful country"
 	}
@@ -36,6 +38,34 @@ func ElizaResponse(input string) string{
 	return answers[rand.Intn(len(answers))]
 }
 
+//Adapted from https://gist.github.com/ianmcloughlin/c4c2b8dc586d06943f54b75d9e2250fe
+func reflectPronouns(input string) string {
+	//Splitting the input on word.
+	re := regexp.MustCompile(`\b`)
+	tokens := re.Split(input, -1)
+	
+	// List of the reflections.
+	reflectionMap := [][]string{
+		{`I`, `you`},
+		{`me`, `you`},
+		{`you`, `me`},
+		{`my`, `your`},
+		{`your`, `my`},
+	}
+
+	//Looping through each token, reflecting it if there's a match.
+	for i, token := range tokens {
+		for _, reflectionMap := range reflectionMap {
+			if matched, _ := regexp.MatchString(reflectionMap[0], token); matched {
+				tokens[i] = reflectionMap[1]
+				break
+			}
+		}
+	}
+	
+	//Putting the tokens back together.
+	return strings.Join(tokens, ``)
+}
 func main() {
 	//Using the current time to seed.
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -75,4 +105,7 @@ func main() {
 	fmt.Println("I am supposed to just take what you’re saying at face value?")
 	fmt.Println(ElizaResponse("I am supposed to just take what you’re saying at face value?"))
 	fmt.Println()
+
+	fmt.Println(reflectPronouns("You are my friend."))
+	
 }
