@@ -29,6 +29,15 @@ func ElizaResponse(input string) string{
 	if matched := re.MatchString(input); matched {
 		return re.ReplaceAllString(input, "How do you know you are $1")
 	}
+	if matched, _:= regexp.MatchString(`(?i).*\bHello\b|\bHi\b|\bHey\b.*`, input);matched{
+		return "Hello there, how are you"
+	}
+	if matched, _:= regexp.MatchString(`(?i).*\bHelp\b.*`,input);matched{
+		return "If we continue talking, maybe I can help you?"
+	}
+	if matched, _:= regexp.MatchString(`(?i).*\bGoodbye|Bye\b.*`,input);matched{
+		return "Farewell friend, until next time"
+	}
 	//This randomly returns one of the following strings if nothing is matched.
 	answers := []string{
 		"I’m not sure what you’re trying to say. Could you explain it to me?",
@@ -105,6 +114,19 @@ func main() {
 	fmt.Println("I am supposed to just take what you’re saying at face value?")
 	fmt.Println(ElizaResponse("I am supposed to just take what you’re saying at face value?"))
 	fmt.Println()
+
+	fmt.Println("Hello Eliza!")
+	fmt.Println(ElizaResponse("Hello Eliza!"))
+	fmt.Println()
+
+	fmt.Println("Goodbye for now, until we speak again")
+	fmt.Println(ElizaResponse("Goodbye for now, until we speak again"))
+	fmt.Println()
+
+	fmt.Println("Can you help me please")
+	fmt.Println(ElizaResponse("Can you help me please"))
+	fmt.Println()
+	
 
 	fmt.Println(reflectPronouns("You are my friend."))
 	
